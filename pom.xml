@@ -38,6 +38,18 @@
             <version>3.3.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-common</artifactId>
+            <version>3.3.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+            <version>3.3.5</version>
+        </dependency>
+
         <!-- AWS EMR SDK -->
         <dependency>
             <groupId>com.amazonaws</groupId>
