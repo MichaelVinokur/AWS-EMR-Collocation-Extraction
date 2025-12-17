@@ -27,14 +27,19 @@ public class collocationExtraction {
         protected void map(LongWritable key, Text value, Context context)
                 throws IOException, InterruptedException {
 
-            String line = value.toString().trim();
-            if (line.isEmpty()) return;
+            String[] parts = value.toString().split("\t"); // splits by tab
+            if (parts.length < 4) return;
 
-            for (String word : line.split("\\s+")) {
-                if (word.isEmpty()) continue;
-                outWord.set(word);
-                context.write(outWord, ONE);
-            }
+            String ngram = parts[0];        // bigram
+            String [] words= ngram.split(" ");
+            if (words.length != 2) return; // only bigrams.
+            int year = Integer.parseInt(parts[1]);      // year
+            int matchCount = Integer.parseInt(parts[2]);     // count
+
+            int decadeStart = (year / 10) * 10; // 1997/10=199*10=1990
+
+            context.write(new Text(decadeStart + "|" + words[0] + "|" + words[1]), new IntWritable(matchCount));
+
         }
     }
 
@@ -96,3 +101,5 @@ public class collocationExtraction {
     }
 
 }
+
+// The dataset you are using is already a 2-gram dataset So every record’s ngram field is exactly two words.
