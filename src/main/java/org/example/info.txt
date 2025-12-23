@@ -1,0 +1,36 @@
+Hadoop - is the operating system of the cloud. While standard software runs on a single computer, Hadoop is designed to take a massive task, distribute it across hundreds of computers, and manage them so they work together. It provides us with a way to store giant files (HDFS) and a method to process them (MapReduce).
+Google N-grams - Google scanned millions of books and divided them into word combinations called N-grams. The format of each line in the files you receive is as follows:
+        ngram <TAB> year <TAB> match_count <TAB> volume_count
+The Combiner - is a "mini-reducer" that runs on the Mapper's computer before the information is even sent over the network.
+        How the Combiner Works The Mapper might emit thousands of messages like (State of Israel, 1), (State of Israel, 1). The Combiner takes all these messages on that same local computer and aggregates them into a single entry: (State of Israel, 20). Only this unified result is sent to the actual Reducer over the network.
+
+The Problem: In the original code, the Reducer used a HashMap to store all word counts for an entire decade in memory. Since the Google dataset contains millions of unique words, the HashMap would grow too large for the RAM to handle, causing the program to crash with an OutOfMemory error
+The Solution: Secondary Sorting (Order Inversion): We replaced the HashMap by implementing Secondary Sorting. We created a Composite Key that includes a type field to control the sort order.
+Why it works: By using this "index" or "priority" in the compareTo method, Hadoop's internal sorting mechanism ensures that the Reducer receives the data in a specific order: $N$ arrives first, then the individual counts, and finally the bigrams.
+
+no need for mapperLLR!!!
+
+Why do we still use a HashMap and why must we clear it?
+Secondary Sorting, individual word counts (Type 1 and Type 2) are guaranteed to arrive at the Reducer before the specific bigrams (Type 3). We use a small HashMap as a temporary "storage buffer" to hold these individual counts so they are available the moment a bigram arrives to be processed.
+In the previous version: The code attempted to store every bigram in a HashMap. Since the number of possible word combinations is astronomical, this consumed all available RAM and caused crashes.
+In the new version: We only store individual unique words for a single decade. The number of unique words in a language is finite and relatively small (tens of thousands), which easily fits into standard RAM. We no longer store bigrams in memory; they are processed and emitted immediately as they arrive.
+Clearing the map ensures we only use memory for the current decade being processed
+
+MapperBasic :
+input: Raw Google 2-gram dataset word1 word2 <TAB> 1994 <TAB> 50 <TAB> 20
+output: 4 keys english|1990|*|* , english|1990|word1|* , english|1990|*|word2 , english|1990|word1|word2
+
+ReducerBasic:
+input: KeywordKey
+output: KeywordKey and sum english|1990|word1|word2 <TAB> 100
+
+ReducerLLR:
+input:KeywordKey (sorted by type: first english|1990|*|* (N) , then english|1990|word1|*, english|1990|*|word2 (HashMap), then english|1990|word1|word2 (LLR computation))
+output: english|1990|word1|word2 <TAB> 45.67 (text)
+
+Mapper100:
+input:english|1990|word1|word2 <TAB> 45.67 (text)
+output: top 100 lines with the highest scores, sorted in descending order from highest to lowest(File).
+
+EMR - Elastic MapReduce: is a managed service by Amazon (AWS) designed to run Big Data applications at a massive scale easily and quickly.
+    Instead of having to purchase hundreds of servers, install Linux, configure Hadoop, and connect them over a network, Amazon handles all of these tasks for you with the click of a button.
