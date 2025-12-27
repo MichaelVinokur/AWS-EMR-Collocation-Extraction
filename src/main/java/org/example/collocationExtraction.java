@@ -207,13 +207,13 @@ public class collocationExtraction {
             if (line.isEmpty()) return;
 
             String[] parts = line.split("\t");
-            if (parts.length != 2) return;
+            if (parts.length < 2) return;
 
             String fullKey = parts[0];  //eng|1990|w1|w2
             String score = parts[1];    //LLR
 
             String[] keyParts = fullKey.split("\\|");
-            if (keyParts.length < 2) return;
+            if (keyParts.length < 4) return;
 
             String langAndDecade = keyParts[0] + "|" + keyParts[1];
             String w1w2Score = keyParts[2] + "|" + keyParts[3] + "|" + score;

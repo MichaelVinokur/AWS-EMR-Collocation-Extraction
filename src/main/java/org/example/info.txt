@@ -34,3 +34,4 @@ output: top 100 lines with the highest scores, sorted in descending order from h
 
 EMR - Elastic MapReduce: is a managed service by Amazon (AWS) designed to run Big Data applications at a massive scale easily and quickly.
     Instead of having to purchase hundreds of servers, install Linux, configure Hadoop, and connect them over a network, Amazon handles all of these tasks for you with the click of a button.
+    EMR has already all the libraries no need in th jar.(17kb (not 340mb))
