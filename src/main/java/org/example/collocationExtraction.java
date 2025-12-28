@@ -325,7 +325,7 @@ public class collocationExtraction {
         job2.setMapOutputKeyClass(KeywordKey.class);
         job2.setMapOutputValueClass(IntWritable.class);
         job2.setOutputKeyClass(Text.class);
-        job2.setOutputValueClass(Text.class); // you emit score as Text
+        job2.setOutputValueClass(Text.class);
 
         FileInputFormat.addInputPath(job2, new Path(out1));
         FileOutputFormat.setOutputPath(job2, new Path(out2));

@@ -19,8 +19,9 @@ public class App {
         //String outputPath = "s3://" + bucketName + "/CollocationProject/output/hebrew_run_" + System.currentTimeMillis();
         //english
         String stopWordsPath = "s3://" + bucketName + "/CollocationProject/config/eng-stopwords.txt";
-        String inputPath = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/2gram/data/part-00000"; //smaller than in the assigment
+        String inputPath = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/2gram/data"; //smaller than in the assigment
         String outputPath = "s3://" + bucketName + "/CollocationProject/output/outputeng/english_run_" + System.currentTimeMillis();
+
 
         String accessKey = System.getenv("AWS_ACCESS_KEY_ID");
         String secretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
